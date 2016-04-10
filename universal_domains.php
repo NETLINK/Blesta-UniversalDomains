@@ -2,10 +2,6 @@
 /**
  * Universal Domains Module
  *
- * @package blesta
- * @subpackage blesta.components.modules.universaldomains
- * @copyright Copyright (c) 2010, Phillips Data, Inc.
- * @link http://www.blesta.com/ Blesta
  * @copyright Copyright (c) 2015, NETLINK IT SERVICES
  * @link http://www.netlink.ie/ NETLINK
  */
@@ -14,16 +10,18 @@ class UniversalDomains extends Module {
 	/**
 	 * @var string The version of this module
 	 */
-	private static $version = "1.0.6-alpha";
+	//private static $version = "1.0.6-alpha";
 	/**
 	 * @var array The authors of this module
 	 */
+	/*
 	private static $authors = array(
 		array(
 			'name' => "NETLINK IT SERVICES",
 			'url' => "http://www.netlink.ie/"
 		),
 	);
+	*/
 	
 	private static $debug_to = "root@localhost";
 	
@@ -34,6 +32,9 @@ class UniversalDomains extends Module {
 	 * Initializes the module
 	 */
 	public function __construct() {
+		
+		$this->loadConfig( dirname( __FILE__ ) . DS . "config.json" );
+		
 		// Load components required by this module
 		Loader::loadComponents( $this, array( "Input" ) );
 		
@@ -43,33 +44,6 @@ class UniversalDomains extends Module {
 		Configure::load( "universal_domains", dirname( __FILE__ ) . DS . "config" . DS );
 	}
 
-	/**
-	 * Returns the name of this module
-	 *
-	 * @return string The common name of this module
-	 */
-	public function getName() {
-		return Language::_( "universal_domains.name", true );
-	}
-	
-	/**
-	 * Returns the version of this module
-	 *
-	 * @return string The current version of this module
-	 */
-	public function getVersion() {
-		return self::$version;
-	}
-
-	/**
-	 * Returns the name and URL for the authors of this module
-	 *
-	 * @return array A numerically indexed array that contains an array with key/value pairs for 'name' and 'url', representing the name and URL of the authors of this module
-	 */
-	public function getAuthors() {
-		return self::$authors;
-	}
-	
 	/**
 	 * Returns the value used to identify a particular service
 	 *
