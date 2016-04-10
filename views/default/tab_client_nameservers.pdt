@@ -1,0 +1,13 @@
+
+	<div class="pad">
+		<ul>
+			<?php
+			if ( isset( $vars ) && is_array( $vars ) ): $i = 0;
+				foreach ( $vars as $key => $value ):
+					if ( $value['type'] == "NS" ): $i++;
+			?>
+						<li><strong>Nameserver <?php echo $i; ?>:</strong> <?php echo $value['target']; ?></li>
+			<?php endif; endforeach; endif; ?>
+		</ul>
+		<p>If you&rsquo;d like to update the nameservers for this domain name, please open a <a href="/client/support/tickets/add/1/">support ticket</a>.</p>
+	</div>

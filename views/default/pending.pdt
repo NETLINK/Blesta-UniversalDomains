@@ -1,0 +1,2 @@
+
+	<p><?php $this->_( "universal_domains.notice.StatusPending" ); ?></p>
