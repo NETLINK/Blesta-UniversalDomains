@@ -1,6 +1,6 @@
 <?php
 // Basics
-$lang['universal_domains.name'] = "universal_domains";
+$lang['universal_domains.name'] = "Univeral Domains";
 $lang['universal_domains.module_row'] = "Account";
 $lang['universal_domains.module_row_plural'] = "Accounts";
 

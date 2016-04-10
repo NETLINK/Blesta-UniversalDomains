@@ -1135,7 +1135,7 @@ class UniversalDomains extends Module {
 	}
 	
 	private function debug( $data ) {
-		mail( self::$debug_to, "Universal Domains Module " . self::$version . " Debug", var_export( $data, true ), "From: blesta@localhost\n\n" );
+		mail( self::$debug_to, "Universal Domains Module Debug", var_export( $data, true ), "From: blesta@localhost\n\n" );
 	}
 	
 }
