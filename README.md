@@ -6,6 +6,8 @@ Universal domains module for Blesta
 * Upload files to components/plugins/universal_domains/
 * Update the supported domain extensions in config/universal_domains.php
 * Install the module in Blesta -> Settings -> Modules -> Available.
+* Click Manage beside the Universal Domains Module.
+* Enter a username and password (it can be anything at all, as it currently doesn't have any function) and save.
 
 Copyright 2016 NETLINK IT SERVICES ( www.netlink.ie )
 
