@@ -1,45 +1,49 @@
 <?php
 // All available TLDs
-Configure::set("universal_domains.tlds", array(
+Configure::set( "universal_domains.tlds", array(
 	".ie", ".de",
 ));
 
 // Transfer fields
-Configure::set("universal_domains.transfer_fields", array(
+Configure::set( "universal_domains.transfer_fields", array(
 	'domain' => array(
-		'label' => Language::_("universal_domains.transfer.domain", true),
+		'label' => Language::_( "universal_domains.transfer.domain", true),
+		'type' => "text"
+	),
+	'auth' => array(
+		'label' => Language::_( "universal_domains.transfer.EPPCode", true ),
 		'type' => "text"
 	),
 ));
 
 // Domain fields
-Configure::set("universal_domains.domain_fields", array(
+Configure::set( "universal_domains.domain_fields", array(
 	'domain' => array(
-		'label' => Language::_("universal_domains.domain.domain", true),
+		'label' => Language::_( "universal_domains.domain.domain", true ),
 		'type' => "text"
 	),
 ));
 
 // Nameserver fields
-Configure::set("universal_domains.nameserver_fields", array(
+Configure::set( "universal_domains.nameserver_fields", array(
 	'ns1' => array(
-		'label' => Language::_("universal_domains.nameserver.ns1", true),
+		'label' => Language::_( "universal_domains.nameserver.ns1", true ),
 		'type' => "text"
 	),
 	'ns2' => array(
-		'label' => Language::_("universal_domains.nameserver.ns2", true),
+		'label' => Language::_("universal_domains.nameserver.ns2", true ),
 		'type' => "text"
 	),
 	'ns3' => array(
-		'label' => Language::_("universal_domains.nameserver.ns3", true),
+		'label' => Language::_( "universal_domains.nameserver.ns3", true ),
 		'type' => "text"
 	),
 	'ns4' => array(
-		'label' => Language::_("universal_domains.nameserver.ns4", true),
+		'label' => Language::_( "universal_domains.nameserver.ns4", true ),
 		'type' => "text"
 	),
 	'ns5' => array(
-		'label' => Language::_("universal_domains.nameserver.ns5", true),
+		'label' => Language::_( "universal_domains.nameserver.ns5", true ),
 		'type' => "text"
 	)
 ));

@@ -118,8 +118,9 @@ class UniversalDomains extends Module {
 	 * @see Module::getServiceName()
 	 */
 	public function getPackageServiceName( $packages, array $vars = null ) {
-		if ( isset( $vars['domain'] ) )
+		if ( isset( $vars['domain'] ) ) {
 			return $vars['domain'];
+		}
 		return null;
 	}
 	
@@ -154,29 +155,30 @@ class UniversalDomains extends Module {
 	 * @see Module::getModule()
 	 * @see Module::getModuleRow()
 	 */
-	public function addService( $package, array $vars=null, $parent_package=null, $parent_service=null, $status="pending" ) {
+	public function addService( $package, array $vars = null, $parent_package = null, $parent_service = null, $status = "pending" ) {
 		
 		$tld = NULL;
 		$input_fields = array();
 		
 		if ( $package->meta->type == "domain" ) {
-			if ( array_key_exists( "auth", $vars ) )
+			if ( array_key_exists( "auth", $vars ) ) {
 				$input_fields = array_merge( Configure::get( "universal_domains.transfer_fields" ), array( 'years' => true ) );
+			}
 			else {
-				if ( isset( $vars['domain'] ) )
+				if ( isset( $vars['domain'] ) ) {
 					$tld = $this->getTld( $vars['domain'] );
-				
+				}
 				$whois_fields = Configure::get( "universal_domains.whois_fields" );
 				$input_fields = array_merge(
 					Configure::get( "universal_domains.domain_fields" ),
-					(array)Configure::get( "universal_domains.domain_fields" . $tld ),
-					(array)Configure::get( "universal_domains.nameserver_fields" ),
-					array( 'years' => true )
+					(array) Configure::get( "universal_domains.domain_fields" . $tld ),
+					(array) Configure::get( "universal_domains.nameserver_fields" ),
+					array ( 'years' => true )
 				);
 			}
 		}
 		
-		if ( isset( $vars['use_module'] ) && $vars['use_module'] == "true" ) {
+		if ( isset ( $vars['use_module'] ) && $vars['use_module'] == "true" ) {
 			
 			if ( $package->meta->type == "domain" ) {
 
@@ -194,8 +196,9 @@ class UniversalDomains extends Module {
 					
 					$fields = array_intersect_key( $vars, $input_fields );
 					
-					if ( $this->Input->errors() )
+					if ( $this->Input->errors() ) {
 						return;
+					}
 					
 					return array( array( 'key' => "domain", 'value' => $fields['domain'], 'encrypted' => 0 ) );
 				}
@@ -660,22 +663,23 @@ class UniversalDomains extends Module {
 	public function getClientAddFields( $package, $vars = null ) {
 		
 		// Handle universal domain name
-		if (isset($vars->domain))
+		if ( isset ( $vars->domain ) )
 			$vars->domain = $vars->domain;
 		
 		if ( $package->meta->type == "domain" ) {
 			
 			// Set default name servers
-			if (!isset($vars->ns) && isset($package->meta->ns)) {
+			if ( ! isset ( $vars->ns ) && isset ( $package->meta->ns ) ) {
 				$i=1;
-				foreach ($package->meta->ns as $ns) {
+				foreach ( $package->meta->ns as $ns) {
 					$vars->{"ns" . $i++} = $ns;
 				}
 			}
 			
 			// Handle transfer request
-			if (isset($vars->transfer) || isset($vars->auth)) {
-				$fields = Configure::get("universal_domains.transfer_fields");
+			if ( isset ( $vars->transfer ) || isset ( $vars->auth ) ) {
+				
+				$fields = array_merge( Configure::get( "universal_domains.transfer_fields" ), Configure::get( "universal_domains.nameserver_fields" ) );
 				
 				// We should already have the domain name don't make editable
 				$fields['domain']['type'] = "hidden";
@@ -685,23 +689,24 @@ class UniversalDomains extends Module {
 			}
 			// Handle domain registration
 			else {
-				$fields = array_merge(Configure::get("universal_domains.nameserver_fields"), Configure::get("universal_domains.domain_fields"));
+				$fields = array_merge( Configure::get( "universal_domains.nameserver_fields" ), Configure::get( "universal_domains.domain_fields" ) );
 				
 				// We should already have the domain name don't make editable
 				$fields['domain']['type'] = "hidden";
 				$fields['domain']['label'] = null;
 				
-				$module_fields = $this->arrayToModuleFields($fields, null, $vars);
+				$module_fields = $this->arrayToModuleFields( $fields, null, $vars );
 				
                 // Build the domain fields
-                $domain_fields = $this->buildDomainModuleFields($vars, true);
-                if ($domain_fields)
+                $domain_fields = $this->buildDomainModuleFields( $vars, true );
+                if ( $domain_fields ) {
                     $module_fields = $domain_fields;
+				}
 			}
 		}
 
         // Determine whether this is an AJAX request
-        return (isset($module_fields) ? $module_fields : new ModuleFields());
+        return ( isset ( $module_fields ) ? $module_fields : new ModuleFields() );
 	}
 
     /**
