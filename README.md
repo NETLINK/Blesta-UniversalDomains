@@ -1,6 +1,8 @@
 # Blesta-UniversalDomains
 Universal domains module for Blesta
 
+[![Total Downloads][ico-downloads]][link-downloads]
+
 **Supports domain extensions without registrar API. Domains can be ordered through Blesta, but must be manually registered. Module does domain availability checking and DNS lookups.**
 
 * Upload files to components/plugins/universal_domains/
