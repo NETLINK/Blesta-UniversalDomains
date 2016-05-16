@@ -23,6 +23,7 @@ class UniversalDomains extends Module {
 	);
 	*/
 	
+	private static $debug = false;
 	private static $debug_to = "root@localhost";
 	
 	// Pending statutes (array)
@@ -1088,8 +1089,10 @@ class UniversalDomains extends Module {
 		$domains = new Whois( $api );
 		$result = $domains->check( array( "domainName" => $domain, "getMode" => "DNS_ONLY" ) );
 		
-		$this->debug( $result );
-		$this->debug( $api->lastRequest() );
+		if ( $this->debug ) {
+			$this->debug( $result );
+			$this->debug( $api->lastRequest() );
+		}
 		
 		//if ( self::$codes[$result->status()][1] == "fail" )
 			//return false;
