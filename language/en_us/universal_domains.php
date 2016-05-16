@@ -1,6 +1,6 @@
 <?php
 // Basics
-$lang['universal_domains.name'] = "Univeral Domains";
+$lang['universal_domains.name'] = "Universal Domains";
 $lang['universal_domains.module_row'] = "Account";
 $lang['universal_domains.module_row_plural'] = "Accounts";
 
@@ -10,6 +10,7 @@ $lang['universal_domains.add_module_row'] = "Add Account";
 $lang['universal_domains.manage.module_rows_title'] = "Accounts";
 $lang['universal_domains.manage.module_rows_heading.username'] = "Username";
 $lang['universal_domains.manage.module_rows_heading.password'] = "Password";
+$lang['universal_domains.manage.module_rows_heading.support'] = "Support Email";
 $lang['universal_domains.manage.module_rows_heading.options'] = "Options";
 $lang['universal_domains.manage.module_rows.edit'] = "Edit";
 $lang['universal_domains.manage.module_rows.delete'] = "Delete";
@@ -19,14 +20,15 @@ $lang['universal_domains.manage.module_rows_no_results'] = "There are no account
 // Row Meta
 $lang['universal_domains.row_meta.username'] = "Username";
 $lang['universal_domains.row_meta.password'] = "Password";
+$lang['universal_domains.row_meta.support'] = "Support Email";
 
 // Add row
-$lang['universal_domains.add_row.box_title'] = "Add universal_domains Account";
+$lang['universal_domains.add_row.box_title'] = "Add Universal Domains Account";
 $lang['universal_domains.add_row.basic_title'] = "Basic Settings";
 $lang['universal_domains.add_row.add_btn'] = "Add Account";
 
 // Edit row
-$lang['universal_domains.edit_row.box_title'] = "Edit universal_domains Account";
+$lang['universal_domains.edit_row.box_title'] = "Edit Universal Domains Account";
 $lang['universal_domains.edit_row.basic_title'] = "Basic Settings";
 $lang['universal_domains.edit_row.add_btn'] = "Update Account";
 
@@ -68,6 +70,9 @@ $lang['universal_domains.!error.password.valid_connection'] = "The user and key 
 $lang['universal_domains.notice.StatusPending'] = "This order is pending. The feature you are trying to access will become available once the order has been activated successfully.";
 $lang['universal_domains.notice.StatusSuspended'] = "This domain name has been suspended; domain management features are therefore currently unavailable. Please contact your service provider for more details or to reinstate service.";
 
+$lang['AdminCompanyEmails.templates.UniversalDomains.nameserver_notice_name'] = "Nameserver update notices";
+$lang['AdminCompanyEmails.templates.UniversalDomains.nameserver_notice_desc'] = "Email notice for nameserver updates (Universal Domains)";
+
 
 // Domain Transfer Fields
 $lang['universal_domains.transfer.domain'] = "Domain Name";
@@ -80,11 +85,11 @@ $lang['universal_domains.domain.WhoisPrivacy'] = "Whois Privacy";
 $lang["universal_domains.domain.DomainAction"] = "Domain Action";
 
 // Nameserver Fields
-$lang['universal_domains.nameserver.ns1'] = "Name Server 1";
-$lang['universal_domains.nameserver.ns2'] = "Name Server 2";
-$lang['universal_domains.nameserver.ns3'] = "Name Server 3";
-$lang['universal_domains.nameserver.ns4'] = "Name Server 4";
-$lang['universal_domains.nameserver.ns5'] = "Name Server 5";
+$lang['universal_domains.nameserver.ns1'] = "Nameserver 1";
+$lang['universal_domains.nameserver.ns2'] = "Nameserver 2";
+$lang['universal_domains.nameserver.ns3'] = "Nameserver 3";
+$lang['universal_domains.nameserver.ns4'] = "Nameserver 4";
+$lang['universal_domains.nameserver.ns5'] = "Nameserver 5";
 
 //$lang['universal_domains.domain.IdnCode'] = "";
 //$lang['universal_domains.domain.Nameservers'] = "";

@@ -1,36 +1,41 @@
-		<?php
-		$this->Widget->clear();
-		$this->Widget->create($this->_("universal_domains.edit_row.box_title", true));
-		?>
+
+		<?php $this->Widget->clear(); ?>
+		<?php $this->Widget->create( $this->_( "universal_domains.edit_row.box_title", true ) ); ?>
+
 		<div class="inner">
-			<?php
-			$this->Form->create();
-			?>
+		
+			<?php $this->Form->create(); ?>
+			
 			<div class="title_row first">
-				<h3><?php $this->_("universal_domains.edit_row.basic_title");?></h3>
+				<h3><?php $this->_( "universal_domains.edit_row.basic_title" ); ?></h3>
 			</div>
+			
 			<div class="pad">
 				<ul>
 					<li>
 						<?php
-						$this->Form->label($this->_("universal_domains.row_meta.username", true), "username");
-						$this->Form->fieldText("username", $this->Html->ifSet($vars->user), array('id' => "username"));
+						$this->Form->label( $this->_( "universal_domains.row_meta.username", true ), "username" );
+						$this->Form->fieldText( "username", $this->Html->ifSet( $vars->username ), array( 'id' => "username" ) );
 						?>
 					</li>
 					<li>
 						<?php
-						$this->Form->label($this->_("universal_domains.row_meta.password", true), "password");
-						$this->Form->fieldText("password", $this->Html->ifSet($vars->key), array('id' => "password"));
+						$this->Form->label( $this->_( "universal_domains.row_meta.password", true ), "password" );
+						$this->Form->fieldText( "password", $this->Html->ifSet( $vars->password ), array( 'id' => "password" ) );
+						?>
+					</li>
+					<li>
+						<?php
+						$this->Form->label( $this->_( "universal_domains.row_meta.support", true ), "support" );
+						$this->Form->fieldText( "support", $this->Html->ifSet( $vars->support ), array( 'id' => "support" ) );
 						?>
 					</li>
 				</ul>
 			</div>
 			
-			<div class="button_row"><a class="btn_right submit" href="#"><?php $this->_("universal_domains.edit_row.add_btn");?></a></div>
-			<?php
-			$this->Form->end();
-			?>
+			<div class="button_row"><a class="btn_right submit" href="#"><?php $this->_( "universal_domains.edit_row.add_btn" ); ?></a></div>
+			
+			<?php $this->Form->end(); ?>
 		</div>
-		<?php
-		$this->Widget->end();
-		?>
+		
+		<?php $this->Widget->end(); ?>

@@ -36,12 +36,24 @@ class UniversalDomains extends Module {
 		$this->loadConfig( dirname( __FILE__ ) . DS . "config.json" );
 		
 		// Load components required by this module
-		Loader::loadComponents( $this, array( "Input" ) );
+		Loader::loadComponents( $this, array( "Input", "Session" ) );
 		
+		# Load required models
+		Loader::loadModels( $this, array( "EmailGroups", "Emails" ) );
+			
 		// Load the language required by this module
 		Language::loadLang( "universal_domains", null, dirname( __FILE__ ) . DS . "language" . DS );
 		
 		Configure::load( "universal_domains", dirname( __FILE__ ) . DS . "config" . DS );
+		
+		//$email_group = $this->EmailGroups->getByAction( "UniversalDomains.nameserver_notice" );
+		
+		//if ( $email_group === false ) {
+			//$this->addEmailGroup();
+		//}
+		
+		//var_dump( $email_group );
+		
 	}
 
 	/**
@@ -355,6 +367,7 @@ class UniversalDomains extends Module {
 	 * @return string HTML content containing information to display when viewing the manager module page
 	 */
 	public function manageModule( $module, array &$vars ) {
+		
 		// Load the view into this object, so helpers can be automatically added to the view
 		$this->view = new View( "manage", "default" );
 		$this->view->base_uri = $this->base_uri;
@@ -362,7 +375,7 @@ class UniversalDomains extends Module {
 		
 		// Load the helpers required for this view
 		Loader::loadHelpers( $this, array( "Form", "Html", "Widget" ) );
-
+		
 		$this->view->set( "module", $module );
 		
 		return $this->view->fetch();
@@ -421,7 +434,8 @@ class UniversalDomains extends Module {
 	 * 	- encrypted Whether or not this field should be encrypted (default 0, not encrypted)
 	 */
 	public function addModuleRow( array &$vars ) {
-		$meta_fields = array( "username", "password" );
+		
+		$meta_fields = array( "username", "password", "support" );
 		$encrypted_fields = array( "password" );
 		
 		$this->Input->setRules( $this->getRowRules( $vars ) );
@@ -941,21 +955,83 @@ class UniversalDomains extends Module {
 		
 		$vars = new stdClass();
 		
+		$email = ! empty( $this->getModuleRow()->meta->support ) ? $this->getModuleRow()->meta->support : false;
+		
+		$fields = $this->serviceFieldsToObject( $service->fields );
+		
+		$dns = dns_get_record( $fields->domain );
+		
+		$ns = array(); $i = 0;
+		
+		if ( !empty( $dns ) && is_array( $dns ) ) {
+			foreach ( $dns as $key => $value ) {
+				if ( $value['type'] == "NS" ) {
+					$ns[$i] = $value['target'];
+					$i++;
+				}
+			}
+		}
+		
 		if ( in_array( $service->status, self::$pending ) ) {
 			$this->view = new View( 'pending', "default" );
+		}
+		else if ( $view == "tab_nameservers" ) {
+			$this->view = new View( 'tab_admin_nameservers', "default" );
+			Loader::loadHelpers( $this, array( "Html" ) );
 		}
 		else if ( $view == "tab_client_nameservers" && $service->status == "suspended" ) {
 			$this->view = new View( 'suspended', "default" );
 		}
+		else if ( $email === false ) {
+			$this->view = new View( 'tab_nameservers_static', "default" );
+			Loader::loadHelpers( $this, array( "Html" ) );
+		}
 		else {
-		
+			
 			$this->view = new View( $view, "default" );
+			Loader::loadHelpers( $this, array( "Form", "Html" ) );
+			
+			if ( ! empty ( $post ) ) {
+				
+				$client_id = $this->Session->read( "blesta_client_id" );
+				
+				if ( ! isset ( $this->Clients ) ) {
+					
+					$ns = array();
+					
+					foreach ( $post['ns'] as $k => $value ) {
+						if ( ! empty ( $value ) ) {
+							if ( checkdnsrr( $value, "A" ) || checkdnsrr( $value, "AAAA" ) ) {
+								$ns[] = $value;
+							}
+							else {
+								$this->Input->setErrors( array( 'errors' => array( 'One or more of your nameservers failed validation. Invalid nameservers were removed automatically.' ) ) );
+							}
+						}
+					}
+					
+					$ns = array_unique ( $ns );
+					
+					Loader::loadModels( $this, array ( "Clients" ) );
+					$client = $this->Clients->get( $client_id, false );
+					
+					$subject = "Update Nameservers - {$fields->domain}";
+					# Create hash for verifying the authenticity of the request
+					$hash = md5( $client_id . $subject . time() );
+					$body = "A request has been made to update the nameservers for {$fields->domain}.\n\n" . implode( "\n", $ns ) . "\n\nHash: {$hash}\n";
+					
+					# Add client note
+					$this->Clients->addNote( $client_id, NULL, array( "title" => $subject, "description" => $body ) );
+					# Cross check hash to verify authenticity
+					$body .= "\nPlease review the client notes to verify the authenticity of this request.";
+					# Send email notification to support address
+					$this->Emails->sendCustom( $client->email, "{$client->first_name} {$client->last_name}", $email, $subject, array ( "text" => $body ) );
+				}
+			}
 			
 		}
 		
-		$fields = $this->serviceFieldsToObject( $service->fields );
-		
-		$vars = dns_get_record( $fields->domain );
+		$vars->ns = $ns;
 		
 		$this->view->set( "vars", $vars );
 		$this->view->setDefaultView( "components" . DS . "modules" . DS . "universal_domains" . DS );
@@ -1127,11 +1203,74 @@ class UniversalDomains extends Module {
 	 * @param string $country The ISO 3166-1 alpha2 country code
 	 * @return string The number in +NNN.NNNNNNNNNN
 	 */
-	private function formatPhone($number, $country) {
-		if (!isset($this->Contacts))
-			Loader::loadModels($this, array("Contacts"));
+	private function formatPhone( $number, $country ) {
+		if ( ! isset ( $this->Contacts ) ) {
+			Loader::loadModels( $this, array ( "Contacts" ) );
+		}
 		
-		return $this->Contacts->intlNumber($number, $country, ".");
+		return $this->Contacts->intlNumber( $number, $country, "." );
+	}
+	
+	private function addEmailGroup() {
+		
+		$this->deleteEmails( "UniversalDomains.nameserver_notice" );
+		return;
+		
+		$group = array(
+			'action' => "UniversalDomains.nameserver_notice",
+			'type' => "staff",
+			//'plugin_dir' => "universal_domains",
+			'notice_type' => 'to',
+			'tags' => "first_name,last_name",
+		);
+		
+		// Add the custom group
+		$group_id = $this->EmailGroups->add( $group );
+		
+		$email = array(
+			'email_group_id' => $group_id,
+			'company_id' => Configure::get( "Blesta.company_id" ),
+			'lang' => "en_us",
+			'from' => "no-reply@mydomain.com",
+			'from_name' => "My Company",
+			'subject' => "Subject of the email",
+			'text' => "Hi {first_name},
+			This is the text version of your email",
+			'html' => "<p>Hi {first_name},</p>
+			<p>This is the HTML version of your email</p>"
+		);
+		
+		// Add an email to the group
+		$this->Emails->add( $email );
+	}
+	
+	private function deleteEmails( $action ) {
+		
+		// Fetch the email template created by this plugin
+		$group = $this->EmailGroups->getByAction( $action );
+		
+		// Delete all emails templates belonging to this plugin's email group and company
+		if ( $group ) {
+			$this->Emails->deleteAll( $group->id, Configure::get( "Blesta.company_id" ) );
+		}
+		
+		try {
+			// Remove the email template created by this plugin
+			if ( $group ) {
+				$this->EmailGroups->delete( $group->id );
+			}
+		}
+		catch ( Exception $e ) {
+			// Error dropping... no permission?
+			$this->Input->setErrors(
+				array(
+					'db' => array(
+						'create' => $e->getMessage()
+					)
+				)
+			);
+			return;
+		}
 	}
 	
 	private function debug( $data ) {

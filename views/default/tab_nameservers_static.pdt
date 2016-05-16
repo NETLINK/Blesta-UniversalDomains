@@ -1,0 +1,17 @@
+
+	<div class="pad">
+	
+		<ul>
+			<?php
+			if ( isset( $vars->ns ) && is_array( $vars->ns ) ):
+				$rows = count( $vars->ns );
+				for ( $i = 0; $i < $rows; $i++ ):
+					$n = $i + 1;
+			?>
+			
+			<li><strong>Nameserver <?php echo $n; ?>:</strong> <?php echo $this->Html->ifSet( $vars->ns[$i] ); ?></li>
+			<?php endfor; endif; ?>
+		</ul>
+		<p>If you&rsquo;d like to update the nameservers for this domain name, please contact support</a>.</p>
+		
+	</div>

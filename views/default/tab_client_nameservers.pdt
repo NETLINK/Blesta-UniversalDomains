@@ -1,13 +1,42 @@
 
 	<div class="pad">
+	
+		<?php
+		/*
 		<ul>
 			<?php
-			if ( isset( $vars ) && is_array( $vars ) ): $i = 0;
-				foreach ( $vars as $key => $value ):
-					if ( $value['type'] == "NS" ): $i++;
+			if ( isset( $vars->ns ) && is_array( $vars->ns ) ): $i = 0;
+				foreach ( $vars->ns as $key => $value ):
 			?>
-						<li><strong>Nameserver <?php echo $i; ?>:</strong> <?php echo $value['target']; ?></li>
-			<?php endif; endforeach; endif; ?>
+						<li><strong>Nameserver <?php echo $key; ?>:</strong> <?php echo $value; ?></li>
+			<?php endforeach; endif; ?>
 		</ul>
 		<p>If you&rsquo;d like to update the nameservers for this domain name, please open a <a href="/client/support/tickets/add/1/">support ticket</a>.</p>
+		*/
+		?>
+		
+		<?php $this->Form->create(); ?>
+		
+		<?php
+		if ( isset( $vars->ns ) && is_array( $vars->ns ) ):
+			$rows = count( $vars->ns ) + 2;
+			for ( $i = 0; $i < $rows; $i++ ):
+				$n = $i + 1;
+		?>
+		
+		<div class="form-group">
+			<?php $this->Form->label( "Nameserver {$n}" ); ?>
+			<?php $this->Form->fieldText( "ns[]", $this->Html->ifSet( $vars->ns[$i] ), array( 'id' => "ns" . $n, 'class' => "form-control", 'placeholder' => "ns{$n}.example.com" ) ); ?>
+		</div>
+		
+		<?php endfor; endif; ?>
+		
+		<p><strong>Please allow up to 48 - 72 hours for updates to fully complete.</strong></p>
+		
+		<button class="btn btn-default pull-right" type="submit">
+			<strong class="fa fa-edit"></strong> Update Nameservers
+		</button>
+		
+		<?php $this->Form->end(); ?>
+		
 	</div>
