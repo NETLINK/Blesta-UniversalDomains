@@ -1001,7 +1001,7 @@ class UniversalDomains extends Module {
 					
 					foreach ( $post['ns'] as $k => $value ) {
 						if ( ! empty ( $value ) ) {
-							if ( checkdnsrr( $value, "A" ) || checkdnsrr( $value, "AAAA" ) ) {
+							if ( checkdnsrr( "{$value}.", "A" ) || checkdnsrr( "{$value}.", "AAAA" ) ) {
 								$ns[] = $value;
 							}
 							else {
